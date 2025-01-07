@@ -1,4 +1,2 @@
-json
-configparser
-http.client
+openai
 streamlit 
