@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 
 # OpenAI API 키 설정
-openai.api_key = "your_openai_api_key"  # 여기에 OpenAI API 키를 입력하세요.
+openai.api_key = camp_api
 
 # Streamlit 앱 제목
 st.title("MBTI 대백과사전")
