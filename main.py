@@ -30,44 +30,54 @@ mbti_descriptions = {
     "ESFP": "연예인형: 사교적이고 활발하며, 주변 사람들과 즐거운 시간을 보내는 것을 좋아합니다."
 }
 
-# 질문 리스트 (질문, 선택지1, 선택지2, 설명1, 설명2)
+# 질문 리스트 (질문, 선택지1, 선택지2)
 questions = [
     ("1. 사람들과 함께 시간을 보내는 것을 좋아하나요?", 
-     "E", "I", 
-     "E: 외향적 (사교적)", 
-     "I: 내향적 (혼자 있는 것을 선호)"),
+     ("E", "외향적 (사교적)"), 
+     ("I", "내향적 (혼자 있는 것을 선호)")),
     
     ("2. 결정을 내릴 때 논리와 사실에 기반을 두나요?", 
-     "T", "F", 
-     "T: 사고형 (논리적)", 
-     "F: 감정형 (감정적으로 판단)"),
+     ("T", "사고형 (논리적)"), 
+     ("F", "감정형 (감정적으로 판단)")),
     
     ("3. 계획을 세우고 따르는 것을 선호하나요?", 
-     "J", "P", 
-     "J: 계획형 (체계적으로 행동)", 
-     "P: 인식형 (융통성과 유연성을 선호)"),
+     ("J", "계획형 (체계적으로 행동)"), 
+     ("P", "인식형 (융통성과 유연성을 선호)")),
     
     ("4. 상상력과 아이디어에 더 끌리나요?", 
-     "N", "S", 
-     "N: 직관형 (아이디어 중심)", 
-     "S: 감각형 (현실 중심)")
+     ("N", "직관형 (아이디어 중심)"), 
+     ("S", "감각형 (현실 중심)"))
 ]
 
 # 사용자 응답 저장
 answers = []
 
 # 질문 반복 처리
-for question, option_a, option_b, desc_a, desc_b in questions:
+for question, option_a, option_b in questions:
     st.write(question)
-    st.write(f"- {option_a}: {desc_a}")
-    st.write(f"- {option_b}: {desc_b}")
-    answer = st.radio("선택하세요:", (option_a, option_b), key=question)
-    answers.append(answer)
+    
+    # 체크박스 생성
+    selected_a = st.checkbox(f"{option_a[0]}: {option_a[1]}", key=f"{question}_a")
+    selected_b = st.checkbox(f"{option_b[0]}: {option_b[1]}", key=f"{question}_b")
+    
+    # 체크박스 유효성 검사
+    if selected_a and selected_b:
+        st.warning("두 옵션 중 하나만 선택하세요.")
+        answers.append(None)
+    elif selected_a:
+        answers.append(option_a[0])
+    elif selected_b:
+        answers.append(option_b[0])
+    else:
+        answers.append(None)
+    
     st.write("---")  # 구분선 추가
 
 # 결과 계산 및 출력
 if st.button("결과 보기"):
-    if len(answers) == len(questions):  # 모든 질문에 답했는지 확인
+    if None in answers:
+        st.warning("모든 질문에 답해주세요.")
+    else:
         mbti_result = "".join(answers)
         st.success(f"당신의 MBTI 유형은 **{mbti_result}** 입니다!")
         
@@ -90,15 +100,4 @@ if st.button("결과 보기"):
         - **감각(S) vs 직관(N)**  
           감각은 현실과 사실에 초점을 맞추고, 직관은 가능성과 아이디어를 중시합니다.
         
-        - **사고(T) vs 감정(F)**  
-          사고는 논리와 객관성을 중시하며, 감정은 공감과 가치를 중요하게 생각합니다.
-        
-        - **판단(J) vs 인식(P)**  
-          판단은 계획과 체계를 선호하며, 인식은 유연성과 즉흥성을 선호합니다.
-        """)
-        
-        # 참고 링크 제공
-        st.write("더 많은 정보를 원하시면 [MBTI 공식 웹사이트](https://www.mbtionline.com/)를 방문하세요.")
-        
-    else:
-        st.warning("모든 질문에 답해주세요.")
+        - **사고(T) vs 감정(F)**
